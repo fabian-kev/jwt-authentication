@@ -1,0 +1,6 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://test:test@localhost:27017/my_test_db
+  jackson:
+    property-naming-strategy: SNAKE_CASE
