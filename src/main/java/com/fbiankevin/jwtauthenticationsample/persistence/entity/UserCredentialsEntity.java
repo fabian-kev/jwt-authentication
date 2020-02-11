@@ -17,7 +17,7 @@ import java.util.Collection;
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @Data
 @Document(collection = "credentials")
-@TypeAlias("UserCredentials")
+@TypeAlias("credential")
 public class UserCredentialsEntity implements UserDetails {
     @Id
     private String id;

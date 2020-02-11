@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +24,7 @@ public class CreateUserImpl implements CreateUser {
     private final UserRepository userRepository;
     private final UserCredentialsRepository userCredentialsRepository;
     private final JacksonMapper jacksonMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public UserResource execute(UserForm userForm) {
         UserEntity userEntity = jacksonMapper.map(userForm, UserEntity.class);
@@ -35,12 +37,13 @@ public class CreateUserImpl implements CreateUser {
         userCredentialsEntity.setAuthorities("admin,super_admin");
 
         UserCredentialsEntity userCredentials = userCredentialsRepository.save(userCredentialsEntity);
-
+        userCredentials.setPassword( bCryptPasswordEncoder.encode( userCredentials.getPassword() ) );
         userEntity.setCredentials(userCredentials);
 
         userEntity = userRepository.save(userEntity);
 
         userCredentials.setUser(userEntity);
+
         userCredentialsRepository.save(userCredentialsEntity);
 
         UserResource resource = jacksonMapper.map(userRepository.save(userEntity), UserResource.class);

@@ -5,7 +5,6 @@ import com.fbiankevin.jwtauthenticationsample.config.response.Oauth2TokenResourc
 import com.fbiankevin.jwtauthenticationsample.helper.JwtTokenUtil;
 import com.fbiankevin.jwtauthenticationsample.persistence.entity.UserCredentialsEntity;
 import com.fbiankevin.jwtauthenticationsample.persistence.repository.UserCredentialsRepository;
-import com.fbiankevin.jwtauthenticationsample.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +13,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,7 +27,7 @@ public class AuthenticationController {
 
     @PostMapping("/token")
     public Oauth2TokenResource login(@RequestBody Oauth2LoginForm form) throws AuthenticationException {
-
+        System.out.println(form.toString());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.getUsername(), form.getPassword()));
         UserCredentialsEntity credentialsEntity = userCredentialsRepository.findByUsername(form.getUsername()).get();
 

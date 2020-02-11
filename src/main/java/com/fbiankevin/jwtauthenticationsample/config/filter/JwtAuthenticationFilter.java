@@ -4,6 +4,7 @@ import com.fbiankevin.jwtauthenticationsample.helper.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,10 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Enumeration;
+import java.util.Objects;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
+    @Qualifier("CustomUserDetailsService")
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -32,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = req.getHeader("Authorization");
         String username = null;
         String authToken = null;
+
         if (header != null && header.startsWith("Bearer ")) {
             authToken = header.replace("Bearer ","");
             try {
@@ -43,6 +49,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch(SignatureException e){
                 logger.error("Authentication Failed. Username or Password not valid.");
             }
+        } else if(Objects.nonNull(header) && !header.startsWith("Bearer ")){
+            System.out.println(header);
+            String basic = header.split("\\s")[1];
+            System.out.println("YO -> "+ new String(Base64.getDecoder().decode(basic)));
         } else {
             logger.warn("couldn't find bearer string, will ignore the header");
         }

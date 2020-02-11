@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @Data
 @Document(collection = "users")
-@TypeAlias("User")
+@TypeAlias("user")
 public class UserEntity {
     @Id
     private String id;
